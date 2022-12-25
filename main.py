@@ -81,9 +81,12 @@ async def find_all_quizes(courses, cookies):
             async with session.get(course) as response:
                 soup = BeautifulSoup(await response.text(), 'lxml')
                 lists = soup.find_all('li', {'class': 'outline-item section scored'})
+                print(course)
                 for section in lists:
                     for link in section.find_all('a', {'class': 'subsection-text outline-button'}):
-                        print(link.get('href'))
+                        if 'Quiz' in link.text and link.find('span', {'class': 'subtitle'}):
+                            print(link.find('div').find('span', {'class': 'localized-datetime subtitle-name'}).get(
+                                'data-datetime'))
                 await session.close()
 
 
