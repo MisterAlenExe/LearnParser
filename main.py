@@ -1,5 +1,7 @@
 import asyncio
 import os
+import re
+
 import dotenv
 import pickle
 import aiohttp
@@ -83,10 +85,9 @@ async def find_all_quizes(courses, cookies):
                 lists = soup.find_all('li', {'class': 'outline-item section scored'})
                 print(course)
                 for section in lists:
-                    for link in section.find_all('a', {'class': 'subsection-text outline-button'}):
-                        if 'Quiz' in link.text and link.find('span', {'class': 'subtitle'}):
-                            print(link.find('div').find('span', {'class': 'localized-datetime subtitle-name'}).get(
-                                'data-datetime'))
+                    for quiz in section.find_all('li', {'class': re.compile('subsection accordion ...... scored')}):
+                        print(f"Name: {quiz.find('h4').text.strip()}")
+                        print(f"Link: {quiz.find('a').get('href')}")
                 await session.close()
 
 
